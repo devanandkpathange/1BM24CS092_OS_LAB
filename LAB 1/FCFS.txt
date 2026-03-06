@@ -1,0 +1,70 @@
+#include<stdio.h>
+
+struct a
+{
+    int pid;
+    int arrival_time;
+    int burst_time;
+    int completion_time;
+    int waiting_time;
+    int turnaround_time;
+};
+
+int main()
+{
+    int n,t,ct=0; double swt=0,stat=0;
+    printf("Enter total number of processes: ");
+    scanf("%d",&n);
+    struct a fcfs[n];
+    for(int i=0;i<n;i++)
+    {
+        printf("Enter arrival time and burst time: ");
+        scanf("%d%d",&fcfs[i].arrival_time,&fcfs[i].burst_time);
+        printf("\n");
+    }
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(fcfs[j].arrival_time>fcfs[j+1].arrival_time)
+            {
+                t=fcfs[j].arrival_time;
+                fcfs[j].arrival_time=fcfs[j+1].arrival_time;
+                fcfs[j+1].arrival_time=t;
+
+                t=fcfs[j].burst_time;
+                fcfs[j].burst_time=fcfs[j+1].burst_time;
+                fcfs[j+1].burst_time=t;
+            }
+        }
+    }
+    for(int i=0;i<n;i++)
+    {
+        fcfs[i].pid=i+1;
+    }
+    for(int i=0;i<n;i++)
+    {
+        if(ct<fcfs[i].arrival_time)
+        {
+            ct=fcfs[i].arrival_time;
+        }
+        fcfs[i].completion_time=ct+fcfs[i].burst_time;
+        fcfs[i].turnaround_time=fcfs[i].completion_time-fcfs[i].arrival_time;
+        fcfs[i].waiting_time=fcfs[i].turnaround_time-fcfs[i].burst_time;
+        ct=fcfs[i].completion_time;
+        swt=swt+fcfs[i].waiting_time;
+        stat=stat+fcfs[i].turnaround_time;
+    }
+    swt=swt/n;
+    stat=stat/n;
+    printf("Process_id \t Arrival_time \t Burst_time \t Completion_time \t Waiting_time \t Turnaround_time \t");
+    for(int i=0;i<n;i++)
+    {
+        printf("\n");
+        printf("%d\t\t%d\t\t%d\t\t%d\t\t\t%d\t\t%d\t\t",fcfs[i].pid,fcfs[i].arrival_time,fcfs[i].burst_time,fcfs[i].completion_time,fcfs[i].waiting_time,fcfs[i].turnaround_time);
+    }
+    printf("\nAverage Waiting time: %lf",swt);
+    printf("\nAverage Turnaround time:%lf",stat);
+    return 0;
+}
+
